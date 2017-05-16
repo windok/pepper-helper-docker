@@ -1,0 +1,31 @@
+version: '3'
+services:
+  api-nginx:
+    image: nginx:1.13
+    container_name: pepper-helper-api-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ${API_SOURCE_FOLDER}:/code
+      - ./build_context/api-nginx/api.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - api-php
+  api-php:
+    build:
+      context: ./build_context/api-php
+      dockerfile: Dockerfile
+    container_name: pepper-helper-api-php
+    volumes:
+      - ${API_SOURCE_FOLDER}:/code
+    links:
+      - db
+  db:
+    image: mysql:5.7
+    container_name: pepper-helper-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - 127.0.0.1:3306:3306
