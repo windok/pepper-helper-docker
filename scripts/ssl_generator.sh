@@ -1,0 +1,1 @@
+      openssl req -newkey rsa:2048 -x509 -nodes -keyout server.key -new -out server.crt -subj /CN=pepper-helper.dev -reqexts SAN -extensions SAN -config <(cat /etc/ssl/openssl.cnf <(printf '[SAN]\nsubjectAltName=DNS:pepper-helper.dev')) -sha256 -days 3650

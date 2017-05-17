@@ -1,39 +1,45 @@
 version: '3'
 services:
   frontend:
-    image: nginx:1.13
-    container_name: pepper-helper-frontend
-    ports:
-      - 80:80
-    volumes:
-      - ${FRONTEND_SOURCE_FOLDER}:/code
-      - ./build_context/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
-    links:
-      - api-nginx
+      image: nginx:1.13
+      container_name: ph-frontend
+      ports:
+        - 443:443
+      volumes:
+        - ${FRONTEND_SOURCE_FOLDER}:/code
+        - ./build_context/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+        - ./build_context/frontend/frontend-ssl.crt:/etc/nginx/ssl/nginx.crt
+        - ./build_context/frontend/frontend-ssl.key:/etc/nginx/ssl/nginx.key
+      links:
+        - api-nginx
   api-nginx:
-    image: nginx:1.13
-    container_name: pepper-helper-api-nginx
-    ports:
-      - 8080:80
-    volumes:
-      - ${API_SOURCE_FOLDER}:/code
-      - ./build_context/api-nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    links:
-      - api-php
+      image: nginx:1.13
+      container_name: ph-api-nginx
+      ports:
+        - 8080:80
+      volumes:
+        - ${API_SOURCE_FOLDER}:/code
+        - ./build_context/api-nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+#        - ./build_context/api-nginx/nginx.crt:/etc/nginx/ssl/nginx.crt
+#        - ./build_context/api-nginx/nginx.key:/etc/nginx/ssl/nginx.key
+      links:
+        - api-php
   api-php:
-    build:
-      context: ./build_context/api-php
-      dockerfile: Dockerfile
-    container_name: pepper-helper-api-php
-    volumes:
-      - ${API_SOURCE_FOLDER}:/code
-    links:
-      - db
+      build:
+        context: ./build_context/api-php
+        dockerfile: Dockerfile
+      image: avanti/ph-php:1
+      container_name: ph-api-php
+      volumes:
+        - ${API_SOURCE_FOLDER}:/code
+      links:
+        - db
   api-test:
       build:
         context: ./build_context/api-php
         dockerfile: Dockerfile
-      container_name: pepper-helper-api-test
+      image: avanti/ph-php:1
+      container_name: ph-api-test
       volumes:
         - ${API_SOURCE_FOLDER}:/code
       links:
@@ -41,12 +47,12 @@ services:
         - api-php
         - api-nginx
   db:
-    image: mysql:5.7
-    container_name: pepper-helper-db
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - ./db_data:/var/lib/mysql
-    ports:
-      - 127.0.0.1:3306:3306
+      image: mysql:5.7
+      container_name: ph-db
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      volumes:
+        - ./db_data:/var/lib/mysql
+      ports:
+        - 127.0.0.1:3306:3306
