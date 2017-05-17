@@ -1,13 +1,23 @@
 version: '3'
 services:
+  frontend:
+    image: nginx:1.13
+    container_name: pepper-helper-frontend
+    ports:
+      - 80:80
+    volumes:
+      - ${FRONTEND_SOURCE_FOLDER}:/code
+      - ./build_context/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - api-nginx
   api-nginx:
     image: nginx:1.13
     container_name: pepper-helper-api-nginx
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - ${API_SOURCE_FOLDER}:/code
-      - ./build_context/api-nginx/api.conf:/etc/nginx/conf.d/default.conf
+      - ./build_context/api-nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     links:
       - api-php
   api-php:
