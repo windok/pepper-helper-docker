@@ -19,6 +19,17 @@ services:
       - ${API_SOURCE_FOLDER}:/code
     links:
       - db
+  api-test:
+      build:
+        context: ./build_context/api-php
+        dockerfile: Dockerfile
+      container_name: pepper-helper-api-test
+      volumes:
+        - ${API_SOURCE_FOLDER}:/code
+      links:
+        - db
+        - api-php
+        - api-nginx
   db:
     image: mysql:5.7
     container_name: pepper-helper-db
