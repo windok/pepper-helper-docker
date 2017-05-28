@@ -7,9 +7,9 @@ services:
         - 443:443
       volumes:
         - ${FRONTEND_SOURCE_FOLDER}:/code
-        - ./build_context/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
-        - ./build_context/frontend/frontend-ssl.crt:/etc/nginx/ssl/nginx.crt
-        - ./build_context/frontend/frontend-ssl.key:/etc/nginx/ssl/nginx.key
+        - ./build_context/nginx/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+        - ./build_context/nginx/frontend/frontend-ssl.crt:/etc/nginx/ssl/nginx.crt
+        - ./build_context/nginx/frontend/frontend-ssl.key:/etc/nginx/ssl/nginx.key
       links:
         - api-nginx
   api-nginx:
@@ -19,14 +19,14 @@ services:
         - 8080:443
       volumes:
         - ${API_SOURCE_FOLDER}:/code
-        - ./build_context/api-nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-        - ./build_context/api-nginx/backend-ssl.crt:/etc/nginx/ssl/nginx.crt
-        - ./build_context/api-nginx/backend-ssl.key:/etc/nginx/ssl/nginx.key
+        - ./build_context/nginx/backend/nginx.conf:/etc/nginx/conf.d/default.conf
+        - ./build_context/nginx/backend/backend-ssl.crt:/etc/nginx/ssl/nginx.crt
+        - ./build_context/nginx/backend/backend-ssl.key:/etc/nginx/ssl/nginx.key
       links:
         - api-php
   api-php:
       build:
-        context: ./build_context/api-php
+        context: ./build_context/php-image
         dockerfile: Dockerfile
       image: avanti/ph-php:1
       container_name: ph-api-php
@@ -36,7 +36,7 @@ services:
         - db
   api-test:
       build:
-        context: ./build_context/api-php
+        context: ./build_context/php-image
         dockerfile: Dockerfile
       image: avanti/ph-php:1
       container_name: ph-api-test
