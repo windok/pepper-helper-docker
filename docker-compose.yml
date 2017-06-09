@@ -26,9 +26,9 @@ services:
         - api-php
   api-php:
       build:
-        context: ./build_context/php-image
+        context: ./build_context/php-image/2
         dockerfile: Dockerfile
-      image: avanti/ph-php:1
+      image: avanti/ph-php:2
       container_name: ph-api-php
       volumes:
         - ${API_SOURCE_FOLDER}:/code
@@ -36,9 +36,9 @@ services:
         - db
   api-test:
       build:
-        context: ./build_context/php-image
+        context: ./build_context/php-image/2
         dockerfile: Dockerfile
-      image: avanti/ph-php:1
+      image: avanti/ph-php:2
       container_name: ph-api-test
       volumes:
         - ${API_SOURCE_FOLDER}:/code
