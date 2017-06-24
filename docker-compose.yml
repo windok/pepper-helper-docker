@@ -32,6 +32,9 @@ services:
       container_name: ph-api-php
       volumes:
         - ${API_SOURCE_FOLDER}:/code
+        - ./build_context/php/xdebug_enabled.ini:/etc/php/7.1/mods-available/xdebug.ini
+      ports:
+        - 127.0.0.1:9090:9090
       links:
         - db
   api-test:
@@ -42,6 +45,7 @@ services:
       container_name: ph-api-test
       volumes:
         - ${API_SOURCE_FOLDER}:/code
+        - ./build_context/php/xdebug_disabled.ini:/etc/php/7.1/mods-available/xdebug.ini
       links:
         - db
         - api-php
