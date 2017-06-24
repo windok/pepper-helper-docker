@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
         php7.1 \
         php7.1-common \
         php7.1-fpm \
+        php7.1-bcmath \
         php7.1-cli \
         php7.1-curl \
         php7.1-intl \
