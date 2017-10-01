@@ -17,6 +17,7 @@ services:
       container_name: ph-api-nginx
       ports:
         - 8080:443
+        - 8323:8323
       volumes:
         - ${API_SOURCE_FOLDER}:/code
         - ./build_context/nginx/backend/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -35,6 +36,7 @@ services:
         - ./build_context/php/xdebug_enabled.ini:/etc/php/7.1/mods-available/xdebug.ini
       ports:
         - 127.0.0.1:9090:9090
+        - 8322:8322
       links:
         - db
   api-test:
